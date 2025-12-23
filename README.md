@@ -1,16 +1,8 @@
 # DiaryML
 
-![Privacy](https://img.shields.io/badge/privacy-100%25%20Local-success?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
-[![Android](https://img.shields.io/badge/Android-App%20Available-3DDC84?style=flat-square&logo=android&logoColor=white)](https://github.com/usr-wwelsh/DiaryML/releases)
-![CPU](https://img.shields.io/badge/No%20GPU-CPU%20Only-blue?style=flat-square)
 
 **Private, encrypted AI journaling with emotion detection and deep insights. Zero surveillance, zero tracking, 100% local.**
 
-| Desktop/Web Interface | Mobile App |
-|:--:|:--:|
-| ![DiaryML Web Demo](webdemo.png) | [![DiaryML Mobile Demo](mobiledemo.png)](mobile_app/README.md) |
-| Full-featured web interface | [Mobile companion app](mobile_app/README.md) with offline sync |
 
 ## ✨ Features
 
@@ -23,7 +15,6 @@
 - ✏️ **Entry Editing** - Edit past entries with emotion re-analysis
 - 💾 **Backup/Restore** - One-click zip backup
 - 🔊 **Voice Output** - Browser TTS for AI responses
-- 📱 **Mobile App** - Flutter app with offline sync ([see mobile app](mobile_app/README.md))
 
 ## 🚀 Quick Start
 
@@ -91,22 +82,3 @@ FastAPI + SQLCipher + llama.cpp + ChromaDB + Hugging Face transformers
 
 - Python 3.10+ | 2-4GB RAM | ~1-3GB disk | **No GPU required**
 - Keyboard shortcuts: `Ctrl+F` (search), `Ctrl+S` (save), `Ctrl+L` (lock), `Esc` (close)
-
-## 🐛 Troubleshooting
-
-- **Model not loading?** Check `models/` folder for valid GGUF file
-- **Slow responses?** Use smaller 1B model or Q4_K_M quantization
-- **Can't unlock?** First password creates DB; delete `diary.db` to reset
-- **ChromaDB error?** Delete `chroma_db/` folder, auto-rebuilds on restart
-
-## 📄 License
-
-MIT License - use freely, modify, share.
-
-## 🙏 Credits
-
-Built with FastAPI, ChromaDB, llama.cpp, sentence-transformers, and Hugging Face transformers.
-
----
-
-**DiaryML**: Your private creative companion. Capture emotions that words cannot express.
