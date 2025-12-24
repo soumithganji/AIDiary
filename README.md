@@ -6,8 +6,9 @@
 AIDiary is more than just a place to write, it's an intelligent vault for your thoughts. Powered by local LLMs and advanced pattern recognition, it turns your daily entries into deep insights about your mood, creativity, and life patterns—all without a single byte of data leaving your machine.
 
 <div align="center">
-  <img src="assets/preview1.png" alt="AIDiary Entry" width="45%" />
-  <img src="assets/preview2.png" alt="AIDiary Chat Interface" width="45%" />
+  <img src="assets/preview1.png" alt="AIDiary Entry" width="80%" />
+  <br/><br/>
+  <img src="assets/preview2.png" alt="AIDiary Chat Interface" width="80%" />
 </div>
 
 ---
