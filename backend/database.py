@@ -1,5 +1,5 @@
 """
-Password-protected encrypted database for DiaryML
+Password-protected encrypted database for AIDiary
 All data stored in an AES-256 encrypted SQLite file using SQLCipher
 Provides both password verification and full database encryption
 
@@ -26,14 +26,14 @@ except ImportError:
 
 
 class DiaryDatabase:
-    """Password-protected and encrypted SQLite database for DiaryML"""
+    """Password-protected and encrypted SQLite database for AIDiary"""
 
     def __init__(self, db_path: Optional[Path] = None, password: Optional[str] = None):
         """
         Initialize database with password protection and encryption
 
         Args:
-            db_path: Path to database file (default: DiaryML/diary.db)
+            db_path: Path to database file (default: AIDiary/diary.db)
             password: Password for encryption and verification
         """
         global _ENCRYPTION_STATUS_LOGGED

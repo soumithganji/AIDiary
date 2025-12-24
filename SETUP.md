@@ -1,4 +1,4 @@
-# DiaryML Setup Guide
+# AIDiary Setup Guide
 
 ## Step-by-Step Installation
 
@@ -14,11 +14,11 @@ Download these files:
 **Alternative (if you have limited RAM/VRAM):**
 - `huihui-qwen3-vl-2b-instruct-abliterated-q4_k_m.gguf` (~1.5 GB) - Smaller quantized version
 
-Place the downloaded files in the `DiaryML/models/` folder.
+Place the downloaded files in the `AIDiary/models/` folder.
 
 ### Step 2: Install Python Dependencies
 
-Open a terminal/command prompt in the DiaryML directory and run:
+Open a terminal/command prompt in the AIDiary directory and run:
 
 ```bash
 cd backend
@@ -55,7 +55,7 @@ Run this to check everything is ready:
 python -c "import fastapi, chromadb, transformers; print('All dependencies installed!')"
 ```
 
-### Step 4: Start DiaryML
+### Step 4: Start AIDiary
 
 **On Windows:**
 ```bash
@@ -101,7 +101,7 @@ If that fails, you can temporarily disable encryption by modifying `database.py`
 
 Make sure:
 1. Files are named exactly `ggml-model-f16.gguf` and `mmproj-model-f16.gguf`
-2. They are in the `DiaryML/models/` folder
+2. They are in the `AIDiary/models/` folder
 3. The files are fully downloaded (not partial)
 
 ### Error: "CUDA out of memory"
@@ -156,7 +156,7 @@ uvicorn.run(
 
 1. **Use GPU acceleration** if available (5-10x faster)
 2. **Use quantized models** (q4_k_m) if RAM is limited
-3. **Close other applications** when using DiaryML
+3. **Close other applications** when using AIDiary
 4. **Reduce context window** in `qwen_interface.py` if needed:
    ```python
    n_ctx=2048,  # Instead of 4096
@@ -164,7 +164,7 @@ uvicorn.run(
 
 ## Next Steps
 
-Once DiaryML is running:
+Once AIDiary is running:
 
 1. Create your first journal entry
 2. Try attaching an image

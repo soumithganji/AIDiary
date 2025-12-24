@@ -1,5 +1,5 @@
 """
-Emotion detection module for DiaryML
+Emotion detection module for AIDiary
 Analyzes text to extract mood and emotional state with professional-grade accuracy
 Uses calibrated models and robust aggregation for reliable results
 """

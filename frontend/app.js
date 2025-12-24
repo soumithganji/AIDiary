@@ -1,30 +1,22 @@
-// DiaryML Frontend - Vanilla JavaScript
+// AIDiary Frontend - Vanilla JavaScript
 
 // Use relative path since frontend is served from same server
 const API_BASE = '/api';
 
 // State
 const state = {
-    unlocked: false,
+    unlocked: true,
     currentView: 'write',
-    selectedImage: null,
     currentChatSession: null,
     chatSessions: []
 };
 
 // DOM Elements
 const elements = {
-    unlockScreen: document.getElementById('unlock-screen'),
     diaryScreen: document.getElementById('diary-screen'),
-    unlockForm: document.getElementById('unlock-form'),
-    passwordInput: document.getElementById('password-input'),
-    unlockError: document.getElementById('unlock-error'),
     greetingText: document.getElementById('greeting-text'),
-    suggestionsContainer: document.getElementById('suggestions-container'),
     entryForm: document.getElementById('entry-form'),
     entryContent: document.getElementById('entry-content'),
-    imageInput: document.getElementById('image-input'),
-    imagePreview: document.getElementById('image-preview'),
     entryFeedback: document.getElementById('entry-feedback'),
     moodDisplay: document.getElementById('mood-display'),
     chatForm: document.getElementById('chat-form'),
@@ -32,7 +24,6 @@ const elements = {
     chatMessages: document.getElementById('chat-messages'),
     entriesList: document.getElementById('entries-list'),
     moodTimeline: document.getElementById('mood-timeline'),
-    lockBtn: document.getElementById('lock-btn')
 };
 
 // === Initialization ===
@@ -45,23 +36,18 @@ function initializeApp() {
     // Setup event listeners
     setupEventListeners();
 
-    // Check if already unlocked
-    checkStatus();
+    // Go directly to diary (no password required)
+    showDiaryScreen();
+    loadDailyGreeting();
+    loadEntries();
 }
 
 function setupEventListeners() {
-    // Unlock form
-    elements.unlockForm.addEventListener('submit', handleUnlock);
-
     // Entry form
     elements.entryForm.addEventListener('submit', handleCreateEntry);
-    elements.imageInput.addEventListener('change', handleImageSelect);
 
     // Chat form
     elements.chatForm.addEventListener('submit', handleChat);
-
-    // Lock button
-    elements.lockBtn.addEventListener('click', lockDiary);
 
     // Search button
     document.getElementById('search-btn').addEventListener('click', openSearchModal);
@@ -86,71 +72,22 @@ function setupEventListeners() {
 
 // === Authentication ===
 
-async function handleUnlock(e) {
-    e.preventDefault();
-
-    const password = elements.passwordInput.value;
-
-    if (!password) {
-        showError('Please enter a password');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE}/unlock`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            state.unlocked = true;
-            showDiaryScreen();
-            loadDailyGreeting();
-            loadEntries();
-        } else {
-            showError(data.detail || 'Incorrect password');
-        }
-    } catch (error) {
-        showError('Failed to connect to server. Make sure the backend is running.');
-        console.error(error);
-    }
-}
-
 async function checkStatus() {
+    // Just check if backend is ready
     try {
         const response = await fetch(`${API_BASE}/status`);
         const data = await response.json();
-
-        if (data.unlocked) {
-            state.unlocked = true;
-            showDiaryScreen();
-            loadDailyGreeting();
-            loadEntries();
-        }
+        console.log('Backend status:', data);
     } catch (error) {
         console.log('Server not ready yet');
     }
 }
 
-function lockDiary() {
-    state.unlocked = false;
-    elements.unlockScreen.classList.add('active');
-    elements.diaryScreen.classList.remove('active');
-    elements.passwordInput.value = '';
-}
-
 function showError(message) {
-    elements.unlockError.textContent = message;
-    setTimeout(() => {
-        elements.unlockError.textContent = '';
-    }, 5000);
+    console.error('Error:', message);
 }
 
 function showDiaryScreen() {
-    elements.unlockScreen.classList.remove('active');
     elements.diaryScreen.classList.add('active');
     loadChatSessions();
 }
@@ -165,53 +102,25 @@ async function loadDailyGreeting() {
         // Display greeting
         elements.greetingText.textContent = data.greeting;
 
-        // Display suggestions
-        displaySuggestions(data.suggestions);
-
     } catch (error) {
         console.error('Failed to load greeting:', error);
-        elements.greetingText.textContent = 'Good morning! Ready to capture today\'s thoughts?';
+        // Time-based fallback greeting
+        const hour = new Date().getHours();
+        let greeting;
+        if (hour >= 5 && hour < 12) {
+            greeting = 'Good morning';
+        } else if (hour >= 12 && hour < 17) {
+            greeting = 'Good afternoon';
+        } else if (hour >= 17 && hour < 21) {
+            greeting = 'Good evening';
+        } else {
+            greeting = 'Hello';
+        }
+        elements.greetingText.textContent = `${greeting}! Ready to capture today's thoughts?`;
     }
-}
-
-function displaySuggestions(suggestions) {
-    elements.suggestionsContainer.innerHTML = '';
-
-    const allSuggestions = [
-        ...(suggestions.projects || []),
-        ...(suggestions.creative || []),
-        ...(suggestions.media || []).slice(0, 2),
-        ...(suggestions.wellness || [])
-    ].slice(0, 6); // Limit to 6 suggestions
-
-    allSuggestions.forEach(suggestion => {
-        const chip = document.createElement('div');
-        chip.className = 'suggestion-chip';
-        chip.textContent = suggestion;
-        chip.addEventListener('click', () => {
-            elements.entryContent.value += `\n${suggestion}`;
-            elements.entryContent.focus();
-        });
-        elements.suggestionsContainer.appendChild(chip);
-    });
 }
 
 // === Entry Creation ===
-
-function handleImageSelect(e) {
-    const file = e.target.files[0];
-
-    if (file) {
-        state.selectedImage = file;
-
-        // Preview image
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            elements.imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" />`;
-        };
-        reader.readAsDataURL(file);
-    }
-}
 
 async function handleCreateEntry(e) {
     e.preventDefault();
@@ -227,10 +136,6 @@ async function handleCreateEntry(e) {
     const formData = new FormData();
     formData.append('content', content);
     formData.append('timestamp', new Date().toISOString());
-
-    if (state.selectedImage) {
-        formData.append('image', state.selectedImage);
-    }
 
     try {
         elements.entryForm.classList.add('loading');
@@ -250,9 +155,6 @@ async function handleCreateEntry(e) {
 
             // Clear form
             elements.entryContent.value = '';
-            elements.imagePreview.innerHTML = '';
-            state.selectedImage = null;
-            elements.imageInput.value = '';
 
             // Reload entries
             loadEntries();
@@ -327,11 +229,23 @@ async function handleChat(e) {
 
     if (!message) return;
 
+    // Disable input while generating
+    elements.chatInput.disabled = true;
+    const submitBtn = elements.chatForm.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
     // Add user message to chat
     addChatMessage(message, 'user');
 
     // Clear input
     elements.chatInput.value = '';
+
+    // Show typing indicator
+    const typingIndicator = document.createElement('div');
+    typingIndicator.className = 'chat-message assistant typing-indicator';
+    typingIndicator.innerHTML = 'typing<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>';
+    elements.chatMessages.appendChild(typingIndicator);
+    elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
 
     try {
         const response = await fetch(`${API_BASE}/chat`, {
@@ -342,6 +256,9 @@ async function handleChat(e) {
                 session_id: state.currentChatSession
             })
         });
+
+        // Remove typing indicator
+        typingIndicator.remove();
 
         const data = await response.json();
 
@@ -357,8 +274,15 @@ async function handleChat(e) {
             addChatMessage('Sorry, I encountered an error. Please try again.', 'assistant');
         }
     } catch (error) {
+        // Remove typing indicator on error too
+        typingIndicator.remove();
         addChatMessage('Failed to connect to AI. Make sure the model is loaded.', 'assistant');
         console.error(error);
+    } finally {
+        // Re-enable input
+        elements.chatInput.disabled = false;
+        if (submitBtn) submitBtn.disabled = false;
+        elements.chatInput.focus();
     }
 }
 
@@ -371,7 +295,7 @@ function addChatMessage(text, sender) {
     if (sender === 'assistant' && 'speechSynthesis' in window) {
         const speakBtn = document.createElement('button');
         speakBtn.className = 'speak-btn';
-        speakBtn.textContent = '🔊';
+        speakBtn.innerHTML = '<img src="/static/speaker.png" alt="Read aloud" width="14" height="14">';
         speakBtn.title = 'Read aloud';
         speakBtn.onclick = () => speakText(text);
         messageDiv.appendChild(speakBtn);
@@ -460,18 +384,10 @@ function displayEntries(entries) {
             <div class="entry-header">
                 <div class="entry-date">${date}</div>
                 <div class="entry-actions">
-                    <button class="edit-btn" onclick="editEntry(${entry.id})" title="Edit entry">✏️</button>
                     <button class="delete-btn" onclick="deleteEntry(${entry.id})" title="Delete entry">×</button>
                 </div>
             </div>
             <div class="entry-preview" id="entry-preview-${entry.id}">${entry.content}</div>
-            <div class="entry-edit" id="entry-edit-${entry.id}" style="display: none;">
-                <textarea class="entry-edit-textarea" id="entry-textarea-${entry.id}">${entry.content}</textarea>
-                <div class="entry-edit-actions">
-                    <button class="edit-save-btn" onclick="saveEditedEntry(${entry.id})">Save</button>
-                    <button class="edit-cancel-btn" onclick="cancelEditEntry(${entry.id})">Cancel</button>
-                </div>
-            </div>
             ${moodsHtml}
         `;
 
@@ -603,84 +519,7 @@ function switchTab(tabName) {
     }
 }
 
-// === Entry Editing ===
 
-function editEntry(entryId) {
-    // Hide preview, show edit textarea
-    const preview = document.getElementById(`entry-preview-${entryId}`);
-    const edit = document.getElementById(`entry-edit-${entryId}`);
-
-    if (preview && edit) {
-        preview.style.display = 'none';
-        edit.style.display = 'block';
-
-        // Focus the textarea
-        const textarea = document.getElementById(`entry-textarea-${entryId}`);
-        if (textarea) {
-            textarea.focus();
-            // Move cursor to end
-            textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-        }
-    }
-}
-
-function cancelEditEntry(entryId) {
-    // Show preview, hide edit textarea
-    const preview = document.getElementById(`entry-preview-${entryId}`);
-    const edit = document.getElementById(`entry-edit-${entryId}`);
-
-    if (preview && edit) {
-        preview.style.display = 'block';
-        edit.style.display = 'none';
-    }
-}
-
-async function saveEditedEntry(entryId) {
-    const textarea = document.getElementById(`entry-textarea-${entryId}`);
-
-    if (!textarea) {
-        return;
-    }
-
-    const newContent = textarea.value.trim();
-
-    if (!newContent) {
-        alert('Entry cannot be empty');
-        return;
-    }
-
-    try {
-        const formData = new FormData();
-        formData.append('content', newContent);
-
-        const response = await fetch(`${API_BASE}/entries/${entryId}`, {
-            method: 'PUT',
-            body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            // Update was successful
-            // Reload entries to show the updated content
-            loadEntries();
-
-            // Show success message briefly
-            const preview = document.getElementById(`entry-preview-${entryId}`);
-            if (preview) {
-                preview.style.background = 'rgba(76, 175, 80, 0.1)';
-                setTimeout(() => {
-                    preview.style.background = '';
-                }, 1000);
-            }
-        } else {
-            alert(data.detail || 'Failed to update entry');
-        }
-    } catch (error) {
-        console.error('Error updating entry:', error);
-        alert('Failed to update entry');
-    }
-}
 
 // === Search ===
 
@@ -782,12 +621,6 @@ function handleKeyboardShortcuts(e) {
         openSearchModal();
     }
 
-    // Ctrl/Cmd + L: Lock
-    if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
-        e.preventDefault();
-        lockDiary();
-    }
-
     // Ctrl/Cmd + S: Save entry (if in entry textarea)
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         if (document.activeElement === elements.entryContent) {
@@ -822,47 +655,6 @@ function updateWordCount() {
     wordCountDiv.textContent = `${wordCount} words · ${charCount} characters`;
 }
 
-// === Backup & Restore ===
-
-async function createBackup() {
-    if (!confirm('Create a backup of your diary? This will download a zip file.')) {
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE}/backup`);
-
-        if (response.ok) {
-            // Download the zip file
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-
-            // Get filename from response headers
-            const contentDisposition = response.headers.get('Content-Disposition');
-            const filename = contentDisposition
-                ? contentDisposition.split('filename=')[1].replace(/['"]/g, '')
-                : `DiaryML_Backup_${new Date().toISOString().split('T')[0]}.zip`;
-
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-
-            alert('Backup created successfully!');
-        } else {
-            alert('Failed to create backup');
-        }
-    } catch (error) {
-        console.error('Backup error:', error);
-        alert('Failed to create backup');
-    }
-}
-
-// Make backup function available globally
-window.createBackup = createBackup;
 
 // === Chat Session Management ===
 
@@ -937,28 +729,7 @@ async function startNewChat() {
     clearChatMessages();
 }
 
-async function clearCurrentChat() {
-    if (!state.currentChatSession) {
-        clearChatMessages();
-        return;
-    }
 
-    if (!confirm('Clear all messages in this chat?')) {
-        return;
-    }
-
-    try {
-        await fetch(`${API_BASE}/chat/sessions/${state.currentChatSession}/clear`, {
-            method: 'POST'
-        });
-
-        clearChatMessages();
-        loadChatSessions();
-    } catch (error) {
-        console.error('Failed to clear chat:', error);
-        alert('Failed to clear chat');
-    }
-}
 
 async function deleteCurrentChat() {
     if (!state.currentChatSession) {
@@ -987,7 +758,7 @@ async function deleteCurrentChat() {
 
 // Make functions globally available
 window.startNewChat = startNewChat;
-window.clearCurrentChat = clearCurrentChat;
+
 window.deleteCurrentChat = deleteCurrentChat;
 
 // === Settings & Model Management ===
@@ -1007,6 +778,48 @@ function closeSettingsModal() {
     }
 }
 
+// === Main View Switching (New Entry vs Journal) ===
+
+function switchMainView(viewName) {
+    // defined in index.html: 'new-entry' or 'journal'
+
+    // Update nav buttons
+    document.querySelectorAll('.main-nav-btn').forEach(btn => {
+        // Simple check based on onclick attribute text would be brittle,
+        // so let's check if the button calls the function with the same argument
+        // OR simpler: we can just remove active from all and add to the clicked one
+        // IF we passed 'this'... but we passed a string.
+        // Let's just match by the onclick content for now or add data attributes in HTML next time.
+        // Actually, let's just use the fact that there are only two buttons.
+        const onClickAttr = btn.getAttribute('onclick');
+        if (onClickAttr && onClickAttr.includes(`'${viewName}'`)) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    // Update Views
+    const entryView = document.getElementById('view-new-entry');
+    const journalView = document.getElementById('view-journal');
+
+    if (viewName === 'new-entry') {
+        entryView.style.display = 'block';
+        entryView.classList.add('active');
+        journalView.style.display = 'none';
+        journalView.classList.remove('active');
+    } else {
+        entryView.style.display = 'none';
+        entryView.classList.remove('active');
+        journalView.style.display = 'block';
+        journalView.classList.add('active'); // This usually helps with "display: flex" inside
+    }
+}
+
+// Make globally available
+window.switchMainView = switchMainView;
+window.closeSettingsModal = closeSettingsModal;
+
 async function loadModelInfo() {
     try {
         const response = await fetch(`${API_BASE}/models/list`);
@@ -1019,15 +832,15 @@ async function loadModelInfo() {
             modelInfoDiv.innerHTML = `
                 <div style="font-weight: 600; margin-bottom: 0.5rem;">Currently Loaded Model</div>
                 <div style="font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--accent);">
-                    📦 <strong>${cm.name || cm.filename}</strong>
+                    <strong>${cm.name || cm.filename}</strong>
                 </div>
                 <div style="font-size: 0.85rem;">
                     Size: <strong>${cm.size}</strong> |
                     Quantization: <strong>${cm.quantization}</strong>
                 </div>
                 <div style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-secondary);">
-                    ${cm.is_thinking ? '<span style="color: var(--accent);">🧠 Thinking Model</span>' : '📝 Standard Model'} |
-                    ${cm.has_vision ? '<span style="color: var(--accent);">👁️ Vision Capable</span>' : '💬 Text-Only'}
+                    ${cm.is_thinking ? '<span style="color: var(--accent);">Thinking Model</span>' : 'Standard Model'} |
+                    ${cm.has_vision ? '<span style="color: var(--accent);">Vision Capable</span>' : 'Text-Only'}
                 </div>
             `;
         } else {
@@ -1080,9 +893,9 @@ async function switchToModel(filename) {
 
         if (response.ok) {
             const modelName = data.model_info.name || data.model_info.filename;
-            const visionStatus = data.model_info.has_vision ? '👁️ Vision: Yes' : '💬 Vision: No (Text-Only)';
-            const thinkingStatus = data.model_info.is_thinking ? '🧠 Thinking Model' : '📝 Standard Model';
-            alert(`✓ Successfully switched to:\n📦 ${modelName}\n\nModel Info:\n- Size: ${data.model_info.size}\n- Quantization: ${data.model_info.quantization}\n- Context: ${data.model_info.context_window} tokens\n- ${visionStatus}\n- ${thinkingStatus}\n\n✓ This model will be remembered and reloaded on next startup!`);
+            const visionStatus = data.model_info.has_vision ? 'Vision: Yes' : 'Vision: No (Text-Only)';
+            const thinkingStatus = data.model_info.is_thinking ? 'Thinking Model' : 'Standard Model';
+            alert(`Successfully switched to:\n${modelName}\n\nModel Info:\n- Size: ${data.model_info.size}\n- Quantization: ${data.model_info.quantization}\n- Context: ${data.model_info.context_window} tokens\n- ${visionStatus}\n- ${thinkingStatus}\n\nThis model will be remembered and reloaded on next startup!`);
             loadModelInfo(); // Reload to show new current model
         } else {
             alert(`Failed to switch model: ${data.detail}`);
@@ -1277,8 +1090,8 @@ function renderMoodCycles(data) {
                     </div>
                     <ul class="time-mood-list">
                         ${topMoods.map(([emotion, score]) =>
-                            `<li>${emotion}: ${(score * 100).toFixed(0)}%</li>`
-                        ).join('')}
+                `<li>${emotion}: ${(score * 100).toFixed(0)}%</li>`
+            ).join('')}
                     </ul>
                     <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem;">
                         ${timeData.count} entries
@@ -1544,7 +1357,7 @@ function initMobileMenu() {
     function toggleMobileMenu() {
         sidebar?.classList.toggle('mobile-open');
         mobileOverlay.classList.toggle('active');
-        
+
         // Prevent body scrolling when menu is open
         if (sidebar?.classList.contains('mobile-open')) {
             document.body.style.overflow = 'hidden';

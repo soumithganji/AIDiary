@@ -1,5 +1,5 @@
 """
-Test script to verify DiaryML setup
+Test script to verify AIDiary setup
 Run this to check if all components are working
 """
 
@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 print("=" * 60)
-print("DiaryML Setup Verification")
+print("AIDiary Setup Verification")
 print("=" * 60)
 print()
 

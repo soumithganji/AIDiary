@@ -1,5 +1,5 @@
 """
-Temporal Intelligence Engine for DiaryML
+Temporal Intelligence Engine for AIDiary
 Discovers hidden patterns, rhythms, and correlations in your life over time
 
 Features:

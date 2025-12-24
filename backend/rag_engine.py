@@ -1,5 +1,5 @@
 """
-RAG (Retrieval-Augmented Generation) engine for DiaryML
+RAG (Retrieval-Augmented Generation) engine for AIDiary
 Uses ChromaDB for vector storage and semantic search
 """
 

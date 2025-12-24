@@ -1,4 +1,4 @@
-# DiaryML Dependencies
+# AIDiary Dependencies
 
 # Core Framework
 fastapi>=0.104.0

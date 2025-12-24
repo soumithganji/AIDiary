@@ -1,5 +1,5 @@
 """
-Pattern analyzer for DiaryML
+Pattern analyzer for AIDiary
 Extracts projects, activities, and temporal patterns from journal entries
 """
 

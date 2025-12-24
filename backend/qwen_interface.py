@@ -1,5 +1,5 @@
 """
-AI Model interface for DiaryML
+AI Model interface for AIDiary
 Handles AI responses with mood-awareness
 Supports both vision-language models (Qwen-VL) and text-only models (Jamba, etc.)
 Optimized for small 1-3B GGUF models running on CPU
@@ -139,7 +139,7 @@ class QwenInterface:
             print("   - 1B model needs ~1-2GB RAM")
             print("   - 2B model needs ~2-3GB RAM")
             print("   - 3B model needs ~3-4GB RAM")
-            print("\nDiaryML will still work for journaling and mood tracking!")
+            print("\nAIDiary will still work for journaling and mood tracking!")
             print("You just won't have AI chat until the model loads.\n")
             raise
 
@@ -507,6 +507,7 @@ class QwenInterface:
         user_message: str,
         mood_context: Optional[Dict[str, float]] = None,
         past_context: Optional[List[str]] = None,
+        conversation_history: Optional[List[Dict[str, str]]] = None,
         image_path: Optional[str] = None,
         max_tokens: Optional[int] = None,  # Auto-detect if None
         temperature: float = 0.7
@@ -518,6 +519,7 @@ class QwenInterface:
             user_message: The user's journal entry or question
             mood_context: Dict of emotion scores (e.g., {"joy": 0.8, "sadness": 0.1})
             past_context: List of relevant past entries from RAG
+            conversation_history: List of previous messages [{"role": "user/assistant", "content": "..."}]
             image_path: Optional path to image attached to entry
             max_tokens: Maximum response length (auto-detected if None)
             temperature: Creativity (0.0-1.0, higher = more creative)
@@ -532,11 +534,18 @@ class QwenInterface:
         # Build system prompt with mood awareness
         system_prompt = self._build_system_prompt(mood_context, past_context)
 
-        # Build messages
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_message}
-        ]
+        # Build messages array with conversation history
+        messages = [{"role": "system", "content": system_prompt}]
+        
+        # Add conversation history (if any)
+        if conversation_history:
+            # Limit history to prevent context overflow (keep last 8 exchanges)
+            history_limit = 16  # 8 user + 8 assistant messages
+            trimmed_history = conversation_history[-history_limit:]
+            messages.extend(trimmed_history)
+        
+        # Add current user message
+        messages.append({"role": "user", "content": user_message})
 
         # Add image if provided and model supports vision
         if image_path and self.has_vision:
@@ -567,7 +576,7 @@ class QwenInterface:
     ) -> str:
         """Build system prompt with mood and context awareness"""
 
-        prompt = """You are DiaryML, a private creative companion and emotional mirror.
+        prompt = """You are AIDiary, a private creative companion and emotional mirror.
 You help your user reflect, create, and explore their inner world through journaling.
 
 Your role is to:
@@ -688,7 +697,7 @@ Suggest ONE of these activities in a natural, conversational way:
 Keep it brief (2-3 sentences), warm, and encouraging. Do NOT explain your reasoning - just provide the greeting."""
 
         messages = [
-            {"role": "system", "content": "You are DiaryML, a supportive creative companion. Provide direct responses without explaining your reasoning process."},
+            {"role": "system", "content": "You are AIDiary, a supportive creative companion. Provide direct responses without explaining your reasoning process."},
             {"role": "user", "content": prompt}
         ]
 

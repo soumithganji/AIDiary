@@ -1,4 +1,4 @@
-# DiaryML
+# AIDiary
 
 
 **Private, encrypted AI journaling with emotion detection and deep insights. Zero surveillance, zero tracking, 100% local.**
@@ -13,7 +13,6 @@
 - 💬 **Chat Sessions** - Multiple conversations with AI, full history
 - 🔍 **Advanced Search** - Full-text, date range, emotion filters, RAG semantic search
 - ✏️ **Entry Editing** - Edit past entries with emotion re-analysis
-- 💾 **Backup/Restore** - One-click zip backup
 - 🔊 **Voice Output** - Browser TTS for AI responses
 
 ## 🚀 Quick Start
@@ -55,7 +54,7 @@ Works with **any GGUF model** - optimized for 1-3B on CPU:
 
 FastAPI + SQLCipher + llama.cpp + ChromaDB + Hugging Face transformers
 
-## 🔐 Why DiaryML?
+## 🔐 Why AIDiary?
 
 **Surveillance-Free & Private:**
 - ✅ **Zero tracking** - No telemetry, no analytics, no phone-home

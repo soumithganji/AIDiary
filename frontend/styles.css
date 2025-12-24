@@ -1,14 +1,14 @@
-/* DiaryML Styles - Clean, Professional Design */
+/* AIDiary Styles - Clean, Professional Design */
 
 :root {
-    --bg-primary: #0f0f0f;
-    --bg-secondary: #1a1a1a;
-    --bg-tertiary: #242424;
-    --text-primary: #e8e8e8;
-    --text-secondary: #a0a0a0;
-    --accent: #6b8afd;
-    --accent-hover: #5a7ae6;
-    --border: #333;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #f1f3f5;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --accent: #fc6603;
+    --accent-hover: #e05502;
+    --border: #e5e7eb;
     --success: #4caf50;
     --error: #f44336;
     --warning: #ff9800;
@@ -20,12 +20,26 @@
     --fear: #9d84b7;
     --love: #ff8fa3;
     --surprise: #95e1d3;
+
+    /* Font Sizes */
+    --font-xs: 0.75rem;
+    --font-sm: 0.875rem;
+    --font-base: 1rem;
+    --font-md: 1.125rem;
+    --font-lg: 1.25rem;
+    --font-xl: 1.5rem;
+    --font-2xl: 2rem;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
 }
 
 body {
@@ -133,6 +147,7 @@ body {
 /* === MAIN DIARY SCREEN === */
 .container {
     max-width: 1400px;
+    width: 100%;
     margin: 0 auto;
     padding: 2rem;
 }
@@ -164,11 +179,15 @@ header h1 {
     background: var(--bg-secondary);
     border: 1px solid var(--border);
     color: var(--text-primary);
-    padding: 0.5rem 1rem;
+    width: 36px;
+    height: 36px;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
-    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
 .icon-btn:hover {
@@ -183,12 +202,18 @@ header h1 {
     border-radius: 12px;
     padding: 2rem;
     margin-bottom: 2rem;
+    text-align: center;
 }
 
 .greeting-panel h2 {
     font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
+    margin-bottom: 0;
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: var(--accent);
+    /* Fallback */
 }
 
 .suggestions {
@@ -214,17 +239,83 @@ header h1 {
     border-color: var(--accent);
 }
 
-/* Main Content */
-.main-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+/* Main Navigation */
+.main-nav {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    margin-bottom: 0rem;
+    padding-bottom: 0rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
+    border-radius: 12px 12px 0 0;
+    padding: 0 1rem;
+    overflow-x: auto;
 }
 
-@media (max-width: 968px) {
-    .main-content {
-        grid-template-columns: 1fr;
+.main-nav-btn {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-secondary);
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-size: var(--font-base);
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.main-nav-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+}
+
+.main-nav-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+.main-nav-btn .icon {
+    font-size: 1.2rem;
+}
+
+/* Main Content */
+.main-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    /* padding: 2rem; Remove padding here as children have padding */
+    min-height: 600px;
+}
+
+.main-view {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ensure children take full width/height without double borders/backgrounds if needed */
+.entry-section,
+.side-panel {
+    border: none;
+    background: none;
+    border-radius: 0;
+    min-height: 600px;
 }
 
 /* Entry Section */
@@ -233,6 +324,9 @@ header h1 {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
 }
 
 .entry-section h3 {
@@ -247,7 +341,7 @@ header h1 {
     border: 1px solid var(--border);
     border-radius: 8px;
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: var(--font-base);
     font-family: inherit;
     resize: vertical;
     min-height: 200px;
@@ -273,7 +367,7 @@ header h1 {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
-    font-size: 0.9rem;
+    font-size: var(--font-sm);
 }
 
 .file-upload-btn:hover {
@@ -351,7 +445,7 @@ header h1 {
 
 .mood-label {
     width: 100px;
-    font-size: 0.9rem;
+    font-size: var(--font-sm);
     text-transform: capitalize;
 }
 
@@ -370,7 +464,7 @@ header h1 {
 }
 
 .mood-value {
-    font-size: 0.85rem;
+    font-size: var(--font-sm);
     color: var(--text-secondary);
 }
 
@@ -382,7 +476,7 @@ header h1 {
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    height: fit-content;
+    min-height: 600px;
 }
 
 .tabs {
@@ -401,6 +495,7 @@ header h1 {
     cursor: pointer;
     transition: all 0.2s;
     font-weight: 500;
+    font-size: var(--font-sm);
 }
 
 .tab.active {
@@ -414,10 +509,15 @@ header h1 {
 
 .tab-content {
     display: none;
+    height: 100%;
 }
 
 .tab-content.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Prevent container scroll */
+    min-height: 0;
 }
 
 /* Chat Controls */
@@ -430,32 +530,48 @@ header h1 {
 
 #chat-session-select {
     flex: 1;
-    padding: 0.5rem;
-    background: var(--bg-tertiary);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    background-color: var(--bg-tertiary);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: var(--font-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#chat-session-select:hover {
+    border-color: var(--text-secondary);
 }
 
 #chat-session-select:focus {
     outline: none;
     border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(252, 102, 3, 0.2);
 }
 
 .chat-control-btn {
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
     color: var(--text-primary);
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
+    padding: 0.75rem;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: var(--font-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+    height: auto;
+    width: auto;
+    aspect-ratio: 1;
 }
 
 .chat-control-btn:hover {
@@ -463,19 +579,25 @@ header h1 {
     border-color: var(--accent);
 }
 
+.chat-control-btn.delete-btn:hover {
+    background: var(--error);
+    border-color: var(--error);
+}
+
 /* Chat Messages */
 .chat-messages {
-    max-height: 400px;
+    flex: 1;
     overflow-y: auto;
     margin-bottom: 1rem;
     padding-right: 0.5rem;
+    scrollbar-gutter: stable;
 }
 
 .chat-message {
     margin-bottom: 1rem;
     padding: 1rem;
     border-radius: 8px;
-    font-size: 0.95rem;
+    font-size: var(--font-base);
 }
 
 .chat-message.user {
@@ -484,8 +606,8 @@ header h1 {
 }
 
 .chat-message.assistant {
-    background: rgba(107, 138, 253, 0.1);
-    border: 1px solid rgba(107, 138, 253, 0.3);
+    background: rgba(252, 102, 3, 0.1);
+    border: 1px solid rgba(252, 102, 3, 0.3);
     margin-right: 2rem;
 }
 
@@ -496,15 +618,60 @@ header h1 {
     font-style: italic;
 }
 
+/* Typing indicator */
+.typing-indicator {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.typing-dots {
+    display: inline-block;
+}
+
+.typing-dots span {
+    animation: typingDot 1.4s infinite;
+    opacity: 0.3;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingDot {
+
+    0%,
+    60%,
+    100% {
+        opacity: 0.3;
+    }
+
+    30% {
+        opacity: 1;
+    }
+}
+
 .speak-btn {
     background: none;
     border: none;
-    font-size: 1rem;
     cursor: pointer;
     margin-left: 0.5rem;
     opacity: 0.6;
     transition: opacity 0.2s;
-    padding: 0.25rem;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.speak-btn img {
+    /* filter: invert(1); removed for light mode */
+    width: 14px;
+    height: 14px;
+    display: block;
 }
 
 .speak-btn:hover {
@@ -523,6 +690,7 @@ header h1 {
     border: 1px solid var(--border);
     border-radius: 8px;
     color: var(--text-primary);
+    font-size: var(--font-base);
 }
 
 #chat-input:focus {
@@ -538,17 +706,21 @@ header h1 {
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.2s;
+    font-size: var(--font-base);
 }
 
 #chat-form button:hover {
     background: var(--accent-hover);
 }
 
-/* Entries List */
 .entries-list {
-    max-height: 500px;
+    flex: 1;
     overflow-y: auto;
+    scrollbar-gutter: stable;
+    padding-right: 0.5rem;
 }
+
+
 
 .entry-item {
     padding: 1rem;
@@ -571,8 +743,9 @@ header h1 {
 }
 
 .entry-date {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    color: black;
+    font-weight: 500;
 }
 
 .entry-actions {
@@ -580,7 +753,6 @@ header h1 {
     gap: 0.25rem;
 }
 
-.edit-btn,
 .delete-btn {
     background: none;
     border: 1px solid transparent;
@@ -598,11 +770,7 @@ header h1 {
     line-height: 1;
 }
 
-.edit-btn:hover {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-}
+
 
 .delete-btn {
     font-size: 1.5rem;
@@ -615,10 +783,11 @@ header h1 {
 }
 
 .entry-preview {
-    font-size: 0.95rem;
+    font-size: var(--font-base);
     color: var(--text-primary);
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -631,76 +800,21 @@ header h1 {
 }
 
 .mood-tag {
-    font-size: 0.75rem;
+    font-size: var(--font-xs);
     padding: 0.25rem 0.5rem;
     border-radius: 12px;
     background: var(--bg-secondary);
     border: 1px solid;
 }
 
-/* Entry Editing */
-.entry-edit {
-    margin-top: 0.5rem;
-}
 
-.entry-edit-textarea {
-    width: 100%;
-    min-height: 100px;
-    padding: 0.75rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text-primary);
-    font-family: inherit;
-    font-size: 0.95rem;
-    resize: vertical;
-    margin-bottom: 0.5rem;
-}
-
-.entry-edit-textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-.entry-edit-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-}
-
-.edit-save-btn,
-.edit-cancel-btn {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-}
-
-.edit-save-btn {
-    background: var(--success);
-    color: white;
-}
-
-.edit-save-btn:hover {
-    background: #45a049;
-}
-
-.edit-cancel-btn {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    border: 1px solid var(--border);
-}
-
-.edit-cancel-btn:hover {
-    background: var(--bg-primary);
-    border-color: var(--accent);
-}
 
 /* Mood Timeline */
 .mood-timeline {
     padding: 1rem 0;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 
 .timeline-entry {
@@ -712,7 +826,7 @@ header h1 {
 
 .timeline-date {
     font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: black;
     min-width: 80px;
 }
 
@@ -896,7 +1010,7 @@ header h1 {
 
 .search-result-date {
     font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: black;
     margin-bottom: 0.5rem;
 }
 
@@ -1040,12 +1154,14 @@ header h1 {
 
     .main-content {
         padding: 1rem;
-        padding-top: 4rem; /* Space for hamburger menu */
+        padding-top: 4rem;
+        /* Space for hamburger menu */
     }
 }
 
 /* ===== MOBILE (phones) ===== */
 @media (max-width: 768px) {
+
     /* Base font size adjustment */
     body {
         font-size: 14px;
@@ -1108,7 +1224,8 @@ header h1 {
     .chat-control-btn {
         padding: 0.6rem;
         min-width: 44px;
-        min-height: 44px; /* Touch-friendly */
+        min-height: 44px;
+        /* Touch-friendly */
     }
 
     /* Chat interface */
@@ -1264,14 +1381,17 @@ header h1 {
     }
 
     /* Buttons - ensure touch-friendly */
-    button, .btn {
+    button,
+    .btn {
         min-height: 44px;
         min-width: 44px;
         font-size: 0.95rem;
     }
 
     /* Form inputs - touch-friendly */
-    input, textarea, select {
+    input,
+    textarea,
+    select {
         min-height: 44px;
         font-size: 1rem;
     }
@@ -1282,7 +1402,8 @@ header h1 {
     input[type="email"],
     textarea,
     select {
-        font-size: 16px !important; /* Prevents iOS zoom */
+        font-size: 16px !important;
+        /* Prevents iOS zoom */
     }
 }
 
@@ -1346,9 +1467,11 @@ header h1 {
 /* ===== TOUCH IMPROVEMENTS ===== */
 @media (hover: none) and (pointer: coarse) {
     /* Touch-specific adjustments */
-    
+
     /* Larger tap targets */
-    button, a, .clickable {
+    button,
+    a,
+    .clickable {
         min-height: 44px;
         min-width: 44px;
     }
@@ -1387,6 +1510,7 @@ header h1 {
 
 /* ===== PRINT STYLES ===== */
 @media print {
+
     .sidebar,
     .header-actions,
     .tabs,
@@ -1412,6 +1536,7 @@ header h1 {
     padding: 1rem;
     height: 100%;
     overflow-y: auto;
+    scrollbar-gutter: stable;
 }
 
 .insights-header {
@@ -1769,7 +1894,7 @@ header h1 {
 
 .streak-dates {
     font-weight: 600;
-    color: var(--text-primary);
+    color: black;
     margin-bottom: 0.5rem;
 }
 
@@ -1821,6 +1946,7 @@ header h1 {
 
 /* ===== ACCESSIBILITY - REDUCED MOTION ===== */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {

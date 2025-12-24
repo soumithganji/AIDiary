@@ -1,5 +1,5 @@
 """
-Recommendation engine for DiaryML
+Recommendation engine for AIDiary
 Suggests activities, projects, and media based on patterns and mood
 """
 
@@ -46,27 +46,38 @@ class Recommender:
         return suggestions
 
     def _generate_greeting(self, mood_state: Dict[str, float]) -> str:
-        """Generate personalized morning greeting"""
+        """Generate personalized greeting based on time of day and mood"""
+        # Determine time of day
+        hour = datetime.now().hour
+        if 5 <= hour < 12:
+            time_greeting = "Good morning"
+        elif 12 <= hour < 17:
+            time_greeting = "Good afternoon"
+        elif 17 <= hour < 21:
+            time_greeting = "Good evening"
+        else:
+            time_greeting = "Hello"
+        
         greetings = {
             "joy": [
-                "Good morning! You're radiating positive energy today.",
-                "Morning! Looks like you're in great spirits.",
-                "Hey there! That creative spark is shining bright today."
+                f"{time_greeting}! You're radiating positive energy today.",
+                f"{time_greeting}! Looks like you're in great spirits.",
+                f"{time_greeting}! That creative spark is shining bright."
             ],
             "sadness": [
-                "Good morning. Take it easy on yourself today.",
-                "Morning. Remember, it's okay to move at your own pace.",
-                "Hey. Today's a good day for gentle reflection."
+                f"{time_greeting}. Take it easy on yourself today.",
+                f"{time_greeting}. Remember, it's okay to move at your own pace.",
+                f"{time_greeting}. Today's a good day for gentle reflection."
             ],
             "neutral": [
-                "Good morning! Ready to see what today brings?",
-                "Morning! A fresh day, a fresh canvas.",
-                "Hey there! Let's make today count."
+                f"{time_greeting}! Ready to see what today brings?",
+                f"{time_greeting}! A fresh moment, a fresh canvas.",
+                f"{time_greeting}! Let's make today count."
             ],
             "calm": [
-                "Good morning. Perfect energy for deep work today.",
-                "Morning! Clear mind, clear path ahead.",
-                "Hey. Great energy for focused creativity today."
+                f"{time_greeting}. Perfect energy for deep work.",
+                f"{time_greeting}! Clear mind, clear path ahead.",
+                f"{time_greeting}. Great energy for focused creativity."
             ]
         }
 

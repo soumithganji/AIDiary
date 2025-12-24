@@ -1,5 +1,5 @@
 """
-Advanced analytics for DiaryML
+Advanced analytics for AIDiary
 Temporal awareness, pattern detection, and deeper insights
 """
 

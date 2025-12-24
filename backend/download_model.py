@@ -45,7 +45,7 @@ def download_file(url: str, dest: Path):
 
 def main():
     print("=" * 60)
-    print("DiaryML Model Downloader")
+    print("AIDiary Model Downloader")
     print("=" * 60)
     print(f"\nDownloading to: {MODEL_DIR.absolute()}\n")
 

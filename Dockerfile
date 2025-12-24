@@ -1,5 +1,5 @@
-# DiaryML Dockerfile
-# Builds a containerized version of DiaryML for easy deployment
+# AIDiary Dockerfile
+# Builds a containerized version of AIDiary for easy deployment
 
 FROM python:3.11-slim
 
