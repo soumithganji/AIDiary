@@ -1,83 +1,76 @@
-# AIDiary
+# AIDiary 
 
+**Your Private, Local Creative Companion.**
+*Zero Surveillance. Zero Tracking. 100% Local AI.*
 
-**Private, encrypted AI journaling with emotion detection and deep insights. Zero surveillance, zero tracking, 100% local.**
+AIDiary is more than just a place to write, it's an intelligent vault for your thoughts. Powered by local LLMs and advanced pattern recognition, it turns your daily entries into deep insights about your mood, creativity, and life patterns—all without a single byte of data leaving your machine.
 
+<div align="center">
+  <img src="assets/preview1.png" alt="AIDiary Entry" width="45%" />
+  <img src="assets/preview2.png" alt="AIDiary Chat Interface" width="45%" />
+</div>
 
-## ✨ Features
+---
 
-- 🔒 **AES-256 Encrypted** - SQLCipher database, zero cloud dependencies
-- 🧠 **Local AI** - Any GGUF model (1B-3B optimized), CPU-only, hotswappable
-- 😊 **Emotion Detection** - Calibrated AI analyzes 6 emotions with conversational awareness
-- 📊 **Deep Analytics** - Writing streaks, productivity scores, temporal patterns
-- 💬 **Chat Sessions** - Multiple conversations with AI, full history
-- 🔍 **Advanced Search** - Full-text, date range, emotion filters, RAG semantic search
-- ✏️ **Entry Editing** - Edit past entries with emotion re-analysis
-- 🔊 **Voice Output** - Browser TTS for AI responses
+##  Uncompromising Privacy
 
-## 🚀 Quick Start
+I built AIDiary because your thoughts belong to you, and only you.
 
-**Note:** `pysqlcipher3` is required for encryption. Without it, your database will NOT be encrypted!
+- **Local Storage**: Your data lives on your machine in a local SQLite database. You own the file, you control the access.
+- **100% Local Processing**: All AI analysis, vector embeddings, and chat features run locally on your CPU using `llama.cpp` and `SentenceTransformers`.
+- **Offline First**: Works completely offline. Pull the plug and it works just the same.
 
-### Option 1: Docker (Recommended - Easiest!)
+##  Key Features
+
+- **100% Local Intelligence**: Powered by `llama.cpp` and `SentenceTransformers`, running entirely on your CPU for maximum privacy without key-logging or data leakage.
+- **Temporal Intelligence Engine**: Analyzes your journal entries to detect hidden mood cycles (e.g., "Monday anxiety"), productivity trends, and emotional triggers over weeks and months.
+- **Semantic RAG System**: Uses ChromaDB and vector embeddings to let you "chat with your past," retrieving contextually relevant memories based on meaning, not just keywords.
+- **Automatic Pattern Recognition**: A background agent extracts entities to identify projects, movies watched, books read, and recurring activities without manual tagging.
+- **Context-Aware Recommender**: Generates personalized greetings and suggestions (wellness, creative prompts) tailored to your real-time emotional state and time of day.
+- **Privacy-First Architecture**: Built on a local SQLite database with zero telemetry, ensuring your personal thoughts remain offline and under your control.
+
+---
+
+##  Quick Start
+
+### Option 1: Docker (Recommended)
+
+The easiest way to run AIDiary with all dependencies bundled.
 
 ```bash
-# 1. Download a GGUF model to models/ directory
-# 2. Build and run with Docker Compose
+# 1. Download a GGUF model (e.g., Llama-3-8B-Quantized) to the models/ directory
+# 2. Run with Docker Compose
 docker-compose up -d
 
-# 3. Open http://localhost:8000 and set your password
+# 3. Open http://localhost:8000
 ```
-
-**Docker Benefits:**
-- ✅ No dependency hell - everything bundled
-- ✅ Consistent environment across platforms
-- ✅ Easy updates with `docker-compose pull && docker-compose up -d`
-- ✅ Data persists in volumes (diary.db, models/, chroma_db/)
 
 ### Option 2: Manual Installation
 
-1. **Install:** `pip install -r requirements.txt`
-2. **Get a Model:** Download any GGUF model (1-3B recommended) to `models/`
-3. **Run:** Windows: `start.bat` | Linux/macOS: `./start.sh`
-4. **Open:** Navigate to `http://localhost:8000` and set your password
+**Prerequisites:** Python 3.10+, C++ Build Tools (for llama-cpp-python).
 
-## 🧠 Supported Models
+1.  **Install Dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+2.  **Get a Model:**
+    Download any `.gguf` model (1B-7B recommended for CPU) and place it in the `models/` folder.
+3.  **Run:**
+    *   **Windows:** `start.bat`
+    *   **Mac/Linux:** `./start.sh`
+4.  **Access:**
+    Open `http://localhost:8000` in your browser.
 
-Works with **any GGUF model** - optimized for 1-3B on CPU:
-- **1B** (fastest) - 2k tokens, 24k context
-- **2B** (balanced) - 3k tokens, 28k context
-- **3B** (quality) - 4k tokens, 32k context
-- Auto-detects thinking models (`<think>` tags) and vision models
+---
 
-## 🔧 Tech Stack
+##  Tech Stack
 
-FastAPI + SQLCipher + llama.cpp + ChromaDB + Hugging Face transformers
+Built for transparency and performance.
 
-## 🔐 Why AIDiary?
+- **Backend:** FastAPI, Python 3.11
+- **Database:** SQLite
+- **AI Inference:** `llama-cpp-python` (GGUF support)
+- **Vector DB:** ChromaDB (Local persistence)
+- **Frontend:** Vanilla JS, CSS Variables (No build step required)
 
-**Surveillance-Free & Private:**
-- ✅ **Zero tracking** - No telemetry, no analytics, no phone-home
-- ✅ **Zero cloud** - Everything runs locally on your machine
-- ✅ **Zero accounts** - No sign-ups, no services, no third parties
-- ✅ **AES-256 encrypted** - SQLCipher database secured with your password
-- ✅ **Open source** - Audit the code, know exactly what it does
-
-**Easy to Use:**
-- ✅ One command with Docker (`docker-compose up -d`)
-- ✅ Or simple scripts (`start.bat` / `start.sh`)
-- ✅ Works on any platform (Windows, Linux, macOS)
-- ✅ No GPU required - runs on CPU only
-
-**Easy to Modify:**
-- ✅ Simple Python codebase (FastAPI backend)
-- ✅ Vanilla JavaScript frontend (no complex frameworks)
-- ✅ Well-documented API endpoints
-- ✅ MIT licensed - modify freely
-
-⚠️ **Important:** Requires `pysqlcipher3` for encryption. Without it, data is unencrypted!
-
-## 📦 Requirements
-
-- Python 3.10+ | 2-4GB RAM | ~1-3GB disk | **No GPU required**
-- Keyboard shortcuts: `Ctrl+F` (search), `Ctrl+S` (save), `Ctrl+L` (lock), `Esc` (close)
+---
